@@ -14,7 +14,7 @@ def talker():
    data= ser.read(50) # I have "hi" coming from the arduino as a test run over the serial port
    rospy.loginfo(data)
    pub.publish(PoseStamped(data))
-   rospy.sleep(1.0)
+   #rospy.sleep(1.0)
 
 if __name__ == '__main__':
   try:
