@@ -6,20 +6,32 @@ import serial
 from geometry_msgs.msg import PoseStamped
 
 ser = serial.Serial('/dev/ttyUSB0', 9600)
+data = []
+
 
 
 def talker():
+ count = 0
  while not rospy.is_shutdown():
    
-   data= ser.read(50) # I have "hi" coming from the arduino as a test run over the serial port
-   rospy.loginfo(data)
-   pub.publish(PoseStamped(data))
-   rospy.sleep(1.0)
+   char= ser.read()
+   data.append(char)
+   
+   if char == 'w' or count > 0:
+	count += 1
 
+   if  count > 5: # EOM
+       count = 0
+       pose_str = ''.join(data)
+       del data[:]
+       rospy.loginfo(pose_str)
+       pub.publish(String(pose_str))
+   
 if __name__ == '__main__':
   try:
     print 'start serial comm..'
-    pub = rospy.Publisher('pose', PoseStamped, queue_size=10)
+    
+    pub = rospy.Publisher('pose', String, queue_size=1)
     rospy.init_node('ros_receiver')
     talker()
   except rospy.ROSInterruptException:
