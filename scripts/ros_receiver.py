@@ -32,7 +32,7 @@ def talker():
        
        pub.publish(pose_str)
        
-       print j
+       print pose_str
 
    
 if __name__ == '__main__':
