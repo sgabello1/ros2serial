@@ -4,6 +4,8 @@ import rospy
 from std_msgs.msg import String
 import serial
 from geometry_msgs.msg import PoseStamped
+import json
+import yaml
 
 ser = serial.Serial('/dev/ttyUSB0', 9600)
 data = []
@@ -17,15 +19,21 @@ def talker():
    char= ser.read()
    data.append(char)
    
-   if char == 'w' or count > 0:
+   
+   if (len(data) > 103 and char == 'w') or count > 0:
 	count += 1
 
    if  count > 5: # EOM
        count = 0
+       
        pose_str = ''.join(data)
        del data[:]
-       rospy.loginfo(pose_str)
-       pub.publish(String(pose_str))
+       
+       
+       pub.publish(pose_str)
+       
+       print j
+
    
 if __name__ == '__main__':
   try:
