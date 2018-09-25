@@ -3,9 +3,10 @@ import rospy
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
 import serial
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+
 
 def callback(data):
+    ser = serial.Serial('/dev/ttyUSB0', 9600)
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data)
     ser.write(str(data))
     ser.close()
@@ -14,7 +15,7 @@ def listener():
 
     rospy.init_node('broadcaster', anonymous=True)
 
-    rospy.Subscriber("/fake_pose", PoseStamped, callback)
+    rospy.Subscriber("/vrpn_client_node/husky/pose", PoseStamped, callback)
 
     rospy.spin()
 
