@@ -4,7 +4,7 @@ from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
 import serial
 
-ser = serial.Serial('/dev/ttyUSB0', 115200)
+ser = serial.Serial('/dev/ttyUSB0', 9600)
 
 def callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data)

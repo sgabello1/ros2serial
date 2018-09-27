@@ -6,10 +6,10 @@ import serial
 from geometry_msgs.msg import PoseStamped
 import json
 
-ser = serial.Serial('/dev/ttyUSB1', 115200)
+ser = serial.Serial('/dev/ttyUSB1', 9600)
 data = []
 right_dim = 280
-delta = 5
+delta = 10
 
 def talker():
  count = 0
@@ -22,7 +22,7 @@ def talker():
    if ((right_dim - delta < len(data) < right_dim + delta) and char == '!'): #EOM
 	     
        pose_str = ''.join(data) 
-       print "\n lungh data" + str(len(data))
+       #print "\n lungh data" + str(len(data))
        del data[:]
        pose_c = pose_str.decode('utf8').replace("\n", '').replace("!", '').split('position:')
 
@@ -55,7 +55,7 @@ def talker():
                pub.publish(pose_msg)
                print pose_msg
    elif (right_dim - delta < len(data) and char == '!'):
-       print " bad value, delete" + str(len(data))
+       print " bad value, delete because too long package  " + str(len(data))
        del data[:] 
    
 if __name__ == '__main__':
