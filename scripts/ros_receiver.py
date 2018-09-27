@@ -5,12 +5,11 @@ from std_msgs.msg import String
 import serial
 from geometry_msgs.msg import PoseStamped
 import json
-import yaml
 
-ser = serial.Serial('/dev/ttyUSB1', 9600)
+ser = serial.Serial('/dev/ttyUSB1', 115200)
 data = []
 right_dim = 280
-delta = 10
+delta = 5
 
 def talker():
  count = 0
@@ -33,20 +32,25 @@ def talker():
 
                pose_position = "{" + pose[0].replace("x:" , '\"x\" : \"').replace("y:", ' \" , \"y\" : \"').replace("z:", '\" , \"z\" : \"') + "\"}"
                pose_orientation = "{" + pose[1].replace("x:", '\"x\" : \"').replace("y:", ' \" , \"y\" : \"').replace("z:", '\" , \"z\" : \"').replace("w:", '\" , \"w\" : \"') + "\"}"
+
+               try:               
+                 p_position_j = json.loads(pose_position)
+                 p_orientation_j = json.loads(pose_orientation)
+
+
+                 pose_msg = PoseStamped()
+                 pose_msg.pose.position.x = float(p_position_j["x"])
+                 pose_msg.pose.position.y = float(p_position_j["y"])
+                 pose_msg.pose.position.z = float(p_position_j["z"])
+
+                 pose_msg.pose.orientation.x = float(p_orientation_j["x"])
+                 pose_msg.pose.orientation.y = float(p_orientation_j["y"])
+                 pose_msg.pose.orientation.z = float(p_orientation_j["z"])
+                 pose_msg.pose.orientation.w = float(p_orientation_j["w"])
+                 pass
+               except Exception as e:
+                 print "Oops!  That was no valid number.  Try again..."
                
-               p_position_j = json.loads(pose_position)
-               p_orientation_j = json.loads(pose_orientation)
-
-
-               pose_msg = PoseStamped()
-               pose_msg.pose.position.x = float(p_position_j["x"])
-               pose_msg.pose.position.y = float(p_position_j["y"])
-               pose_msg.pose.position.z = float(p_position_j["z"])
-
-               pose_msg.pose.orientation.x = float(p_orientation_j["x"])
-               pose_msg.pose.orientation.y = float(p_orientation_j["y"])
-               pose_msg.pose.orientation.z = float(p_orientation_j["z"])
-               pose_msg.pose.orientation.w = float(p_orientation_j["w"])
 
                pub.publish(pose_msg)
                print pose_msg

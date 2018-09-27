@@ -4,16 +4,17 @@ from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
 import serial
 
+ser = serial.Serial('/dev/ttyUSB0', 115200)
 
 def callback(data):
-    ser = serial.Serial('/dev/ttyUSB0', 9600)
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data)
     
     if ser.isOpen():
         ser.write(str(data) + "!") # ! is my EOM
-        ser.close()
+        
     
 def listener():
+
 
     rospy.init_node('broadcaster', anonymous=True)
 
@@ -22,4 +23,6 @@ def listener():
     rospy.spin()
 
 if __name__ == '__main__':
+    
     listener()
+    ser.close()
