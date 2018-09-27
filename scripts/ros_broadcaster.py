@@ -8,8 +8,10 @@ import serial
 def callback(data):
     ser = serial.Serial('/dev/ttyUSB0', 9600)
     rospy.loginfo(rospy.get_caller_id() + "I heard %s", data)
-    ser.write(str(data))
-    ser.close()
+    
+    if ser.isOpen():
+        ser.write(str(data) + "!") # ! is my EOM
+        ser.close()
     
 def listener():
 
