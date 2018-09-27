@@ -5,7 +5,6 @@ from std_msgs.msg import String
 import serial
 from geometry_msgs.msg import PoseStamped
 import json
-import yaml
 
 ser = serial.Serial('/dev/ttyUSB1', 9600)
 data = []
